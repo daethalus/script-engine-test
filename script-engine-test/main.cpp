@@ -1,7 +1,102 @@
 #include <iostream>
 #include "lua.hpp"
+#include <LuaBridge/LuaBridge.h>
+#include <string>
+
+
+using namespace luabridge;
+
+class Player {
+private:
+	int value;
+public:
+	int pValue;
+
+	Player() {
+		value = 0;
+		pValue = 100;
+	}	
+	void sumValue(int _value) {
+		value = value + _value;
+	}
+	int getValue() {
+		return value;
+	}
+};
+
+//part2
+
+void printMessage(const std::string& s) {
+	std::cout << "cpp: " << s << std::endl;
+}
 
 int main() {
+	lua_State* L = luaL_newstate();
+	luaL_openlibs(L);
+
+	getGlobalNamespace(L)
+		.beginNamespace("functions")
+			.addFunction("printMessage", printMessage)
+		.endNamespace();
+
+	getGlobalNamespace(L)
+		.beginClass<Player>("Player")
+			.addConstructor <void (*) (void)>()
+			.addProperty("pValue", &Player::pValue)
+			.addFunction("sumValue", &Player::sumValue)
+			.addFunction("getValue", &Player::getValue)
+		.endClass();
+
+	luaL_loadfile(L, "function.lua");
+	lua_pcall(L, 0, 0, 0);
+
+	luaL_loadfile(L, "pt2.lua");
+	lua_pcall(L, 0, 0, 0);
+	
+	LuaRef print1 = getGlobal(L, "printMsg");
+	LuaRef sum = getGlobal(L, "sum");
+
+	Player player;	
+
+	try {
+		sum(&player);
+	} catch (const std::exception & e) {
+		std::cout << e.what() << std::endl;
+	}
+
+	 std::cout << "from c: " << player.getValue() << std::endl;
+
+	
+
+	/*luaL_loadfile(L, "pt2-1.lua");
+	lua_pcall(L, 0, 0, 0);
+	LuaRef print2 = getGlobal(L, "printMsg");
+
+
+	print1();
+	print2();
+	print1();
+	print2();*/
+
+	//changing
+
+	/*std::string nada;
+	std::cin >> nada;
+	
+
+	luaL_loadfile(L, "pt2.lua");
+	lua_pcall(L, 0, 0, 0);
+
+	print1 = getGlobal(L, "printMsg");
+	print1();*/
+}
+
+
+
+
+/*
+int main() {
+
 
 	//init lua state
 	lua_State* L = luaL_newstate();
@@ -83,3 +178,4 @@ int main() {
 	std::cout << "hellow word" << std::endl;
 	return 0;
 }
+*/

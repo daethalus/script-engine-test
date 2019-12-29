@@ -6,6 +6,9 @@ cmake_minimum_required (VERSION 3.8)
 project ("script-engine-test")
 
 set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/luajit)
+set(LUA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/lua)
+
+set(LUA_BRIDGE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/LuaBridge)
 
 # Include sub-projects.
 add_subdirectory ("script-engine-test")
