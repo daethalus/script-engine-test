@@ -2,9 +2,11 @@
 #include "lua.hpp"
 #include <LuaBridge/LuaBridge.h>
 #include <string>
+#include <filesystem>
 
 
 using namespace luabridge;
+namespace fs = std::filesystem;
 
 class Player {
 private:
@@ -30,41 +32,70 @@ void printMessage(const std::string& s) {
 	std::cout << "cpp: " << s << std::endl;
 }
 
-int main() {
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-
-	getGlobalNamespace(L)
-		.beginNamespace("functions")
-			.addFunction("printMessage", printMessage)
-		.endNamespace();
-
-	getGlobalNamespace(L)
-		.beginClass<Player>("Player")
-			.addConstructor <void (*) (void)>()
-			.addProperty("pValue", &Player::pValue)
-			.addFunction("sumValue", &Player::sumValue)
-			.addFunction("getValue", &Player::getValue)
-		.endClass();
-
-	luaL_loadfile(L, "function.lua");
-	lua_pcall(L, 0, 0, 0);
-
-	luaL_loadfile(L, "pt2.lua");
-	lua_pcall(L, 0, 0, 0);
+int main(int argc, char* argv[]) {
 	
-	LuaRef print1 = getGlobal(L, "printMsg");
-	LuaRef sum = getGlobal(L, "sum");
-
-	Player player;	
-
-	try {
-		sum(&player);
-	} catch (const std::exception & e) {
-		std::cout << e.what() << std::endl;
+/*	fs::path path;
+	if (argc > 1) {
+		path = std::string(argv[argc - 1]);
+	} else {
+		path = fs::current_path();
 	}
+	
+	for (const auto& entry : fs::directory_iterator(path)) {
+		std::cout << entry.path() << std::endl;
+	}*/	
 
-	 std::cout << "from c: " << player.getValue() << std::endl;
+	//lua_State* L = luaL_newstate();
+	//luaL_openlibs(L);
+
+	//getGlobalNamespace(L)
+	//	.beginNamespace("evolutio")		
+	//	.endNamespace();
+
+	//getGlobalNamespace(L)
+	//	.beginNamespace("functions")
+	//		.addFunction("printMessage", printMessage)
+	//	.endNamespace();
+
+	//getGlobalNamespace(L)
+	//	.beginClass<Player>("Player")
+	//		.addConstructor <void (*) (void)>()
+	//		.addProperty("pValue", &Player::pValue)
+	//		.addFunction("sumValue", &Player::sumValue)
+	//		.addFunction("getValue", &Player::getValue)
+	//	.endClass();
+
+	//luaL_loadfile(L, "function.lua");
+	//lua_pcall(L, 0, 0, 0);
+
+	//luaL_loadfile(L, "pt2.lua");
+	//lua_pcall(L, 0, 0, 0);
+	//LuaRef print1 = getGlobal(L, "printMsg");
+
+	//try {		
+	//	LuaRef asd = getGlobal(L, "evolutio.test");
+	//	if (!asd) {
+	//		std::cout << "not found" << std::endl;
+	//	} else {
+	//		//asd();
+	//	}
+	//	
+	//} catch (const std::exception & e) {
+	//	std::cout << e.what() << std::endl;
+	//}
+	//
+	//
+	//LuaRef sum = getGlobal(L, "sum");
+
+	//Player player;	
+
+	//try {
+	//	sum(&player);
+	//} catch (const std::exception & e) {
+	//	std::cout << e.what() << std::endl;
+	//}
+
+	// std::cout << "from c: " << player.getValue() << std::endl;
 
 	
 

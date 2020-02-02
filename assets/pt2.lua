@@ -3,6 +3,7 @@ function printMsg()
 end
 
 
+
 function sum(player)	
 
 	functions.printMessage("asd");
